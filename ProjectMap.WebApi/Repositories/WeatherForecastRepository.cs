@@ -13,7 +13,7 @@ namespace ProjectMap.WebApi.Repositories
             this.sqlConnectionString = sqlConnectionString;
         }
 
-        public async Task<WeatherForecast> InsertAsync(WeatherForecast weatherForecast)
+        public async Task<2DObject> InsertAsync(WeatherForecast weatherForecast)
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {

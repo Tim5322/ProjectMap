@@ -7,7 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ProjectMap.WebApi.Controllers;
 
 [ApiController]
-[Route("WeatherForecasts")]
+[Route("2DObject")]
 public class WeatherForecastController : ControllerBase
 {
     private readonly WeatherForecastRepository _weatherForecastRepository;
