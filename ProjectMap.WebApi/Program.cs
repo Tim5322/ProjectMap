@@ -11,16 +11,16 @@ builder.Services.AddOpenApi();
 
 builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
 
-var sqlConnectionString = builder.Configuration["SqlConnectionString"];
+var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
+var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
 
-if (string.IsNullOrWhiteSpace(sqlConnectionString))
-    throw new InvalidProgramException("Configuration variable SqlConnectionString not found");
-
-builder.Services.AddTransient<WeatherForecastRepository, WeatherForecastRepository>(o => new WeatherForecastRepository(sqlConnectionString));
+builder.Services.AddTransient<Object2DRepository, Object2DRepository>(o => new Object2DRepository(sqlConnectionString));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.|
+app.MapGet("/", () => $"The API is up . Connection string found: {(sqlConnectionStringFound ? "" : "")}");
+
 app.MapOpenApi();
 
 app.UseHttpsRedirection();
