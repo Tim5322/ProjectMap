@@ -17,12 +17,12 @@ namespace ProjectMap.WebApi.Repositories
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {
-                await sqlConnection.ExecuteAsync("INSERT INTO [Object2D] (Id, PrefabId, PositionX, PositionY, ScaleX, ScaleY, Rotation, SortingLayer) VALUES (@Id, @PrefabId, @PositionX, @PositionY, @ScaleX, @ScaleY, @Rotation, @SortingLayer)", object2D);
+                await sqlConnection.ExecuteAsync("INSERT INTO [Object2D] (Id, PrefabId, PositionX, PositionY, ScaleX, ScaleY, Rotation, SortingLayer, Environment2DId) VALUES (@Id, @PrefabId, @PositionX, @PositionY, @ScaleX, @ScaleY, @Rotation, @SortingLayer, @Environment2DId)", object2D);
                 return object2D;
             }
         }
 
-        public async Task<Object2D?> ReadAsync(Guid id)
+        public async Task<Object2D?> ReadByIdAsync(Guid id)
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {
@@ -30,11 +30,11 @@ namespace ProjectMap.WebApi.Repositories
             }
         }
 
-        public async Task<IEnumerable<Object2D>> ReadAsync()
+        public async Task<IEnumerable<Object2D>> ReadByEnvironmentIdAsync(Guid environment2DId)
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {
-                return await sqlConnection.QueryAsync<Object2D>("SELECT * FROM [Object2D]");
+                return await sqlConnection.QueryAsync<Object2D>("SELECT * FROM [Object2D] WHERE Environment2DId = @Environment2DId", new { environment2DId });
             }
         }
 
@@ -49,7 +49,8 @@ namespace ProjectMap.WebApi.Repositories
                                                  "ScaleX = @ScaleX, " +
                                                  "ScaleY = @ScaleY, " +
                                                  "Rotation = @Rotation, " +
-                                                 "SortingLayer = @SortingLayer " +
+                                                 "SortingLayer = @SortingLayer, " +
+                                                 "Environment2DId = @Environment2DId " +
                                                  "WHERE Id = @Id", object2D);
             }
         }

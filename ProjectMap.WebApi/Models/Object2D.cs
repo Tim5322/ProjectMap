@@ -13,5 +13,7 @@ public class Object2D
     public int ScaleY { get; set; }
     public int Rotation { get; set; }
     public int SortingLayer { get; set; }
+    public Guid Environment2DId { get; set; }
+    public Environment2D? Environment2D { get; set; }
 }
 
