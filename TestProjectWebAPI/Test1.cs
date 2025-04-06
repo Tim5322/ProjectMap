@@ -9,4 +9,14 @@
             Assert.IsTrue(true);
         }
     }
+
+    [TestClass]
+    public class Environment2D
+    {
+        [TestMethod]
+        public void Environment2D_SuccesFully()
+        {
+
+        }
+    }
 }
