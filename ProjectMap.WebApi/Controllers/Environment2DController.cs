@@ -10,13 +10,15 @@ namespace ProjectMap.WebApi.Controllers
     [Route("Environment2Ds")]
     public class Environment2DController : ControllerBase
     {
-        private readonly Environment2DRepository _environment2DRepository;
+        private readonly IEnvironment2DRepository _environment2DRepository;
         private readonly ILogger<Environment2DController> _logger;
+        private readonly IAuthenticationService _authenticationService;
 
-        public Environment2DController(Environment2DRepository environment2DRepository, ILogger<Environment2DController> logger)
+        public Environment2DController(IEnvironment2DRepository environment2DRepository, ILogger<Environment2DController> logger, IAuthenticationService authenticationService)
         {
             _environment2DRepository = environment2DRepository;
             _logger = logger;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet(Name = "ReadEnvironment2Ds")]
@@ -40,18 +42,27 @@ namespace ProjectMap.WebApi.Controllers
         [HttpPost(Name = "CreateEnvironment2D")]
         public async Task<ActionResult> Add(Environment2D environment2D)
         {
-            // Assuming you have a way to get the UserId, for example from the claims
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
+            try
             {
-                return Unauthorized();
+                // Assuming you have a way to get the UserId, for example from the claims
+                var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
+
+                environment2D.Id = Guid.NewGuid();
+                environment2D.UserId = Guid.Parse(userId);
+
+                var createdEnvironment2D = await _environment2DRepository.InsertAsync(environment2D);
+                return CreatedAtRoute("ReadEnvironment2D", new { environment2DId = createdEnvironment2D.Id }, createdEnvironment2D);
             }
 
-            environment2D.Id = Guid.NewGuid();
-            environment2D.UserId = Guid.Parse(userId);
-
-            var createdEnvironment2D = await _environment2DRepository.InsertAsync(environment2D);
-            return CreatedAtRoute("ReadEnvironment2D", new { environment2DId = createdEnvironment2D.Id }, createdEnvironment2D);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating profiel keuze.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPut("{environment2DId}", Name = "UpdateEnvironment2D")]

@@ -28,8 +28,8 @@ builder.Services
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.|
-app.MapGet("/", () => $"The API is up . Connection string found: {(sqlConnectionStringFound ? "" : "")}");
+// Configure the HTTP request pipeline.
+app.MapGet("/", () => $"The API is up. Connection string found: {(sqlConnectionStringFound ? "Yes" : "No")}");
 
 app.MapOpenApi();
 
