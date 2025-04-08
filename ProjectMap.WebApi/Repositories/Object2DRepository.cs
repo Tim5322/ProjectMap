@@ -62,10 +62,5 @@ namespace ProjectMap.WebApi.Repositories
                 await sqlConnection.ExecuteAsync("DELETE FROM [Object2D] WHERE Id = @Id", new { id });
             }
         }
-
-        internal async Task ReadAsync(Guid environment2DId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

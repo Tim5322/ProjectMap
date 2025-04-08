@@ -21,8 +21,18 @@ public class Object2DController : ControllerBase
     [HttpGet("{environment2DId}", Name = "ReadObject2Ds")]
     public async Task<ActionResult<IEnumerable<Object2D>>> Get(Guid environment2DId)
     {
-        var object2Ds = await _object2DRepository.ReadByEnvironmentIdAsync(environment2DId);
+        var object2Ds = await _object2DRepository.ReadAsync(environment2DId);
         return Ok(object2Ds);
+    }
+
+    [HttpGet("{object2DId}", Name = "ReadObject2D")]
+    public async Task<ActionResult<Object2D>> Get(Guid object2DId)
+    {
+        var object2D = await _object2DRepository.ReadAsync(object2DId);
+        if (object2D == null)
+            return NotFound();
+
+        return Ok(object2D);
     }
 
     [HttpPost(Name = "CreateObject2D")]
@@ -37,7 +47,7 @@ public class Object2DController : ControllerBase
     [HttpPut("{object2DId}", Name = "UpdateObject2D")]
     public async Task<ActionResult> Update(Guid object2DId, Object2D newObject2D)
     {
-        var existingObject2D = await _object2DRepository.ReadByIdAsync(object2DId);
+        var existingObject2D = await _object2DRepository.ReadAsync(object2DId);
 
         if (existingObject2D == null)
             return NotFound();
@@ -51,7 +61,7 @@ public class Object2DController : ControllerBase
     [HttpDelete("{object2DId}", Name = "DeleteObject2D")]
     public async Task<IActionResult> Delete(Guid object2DId)
     {
-        var existingObject2D = await _object2DRepository.ReadByIdAsync(object2DId);
+        var existingObject2D = await _object2DRepository.ReadAsync(object2DId);
 
         if (existingObject2D == null)
             return NotFound();
