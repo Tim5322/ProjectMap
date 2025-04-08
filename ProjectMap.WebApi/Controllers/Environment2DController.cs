@@ -2,6 +2,7 @@
 using ProjectMap.WebApi.Models;
 using ProjectMap.WebApi.Repositories;
 using System;
+using System.Security.Claims;
 
 namespace ProjectMap.WebApi.Controllers
 {
@@ -39,7 +40,15 @@ namespace ProjectMap.WebApi.Controllers
         [HttpPost(Name = "CreateEnvironment2D")]
         public async Task<ActionResult> Add(Environment2D environment2D)
         {
+            // Assuming you have a way to get the UserId, for example from the claims
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
             environment2D.Id = Guid.NewGuid();
+            environment2D.UserId = Guid.Parse(userId);
 
             var createdEnvironment2D = await _environment2DRepository.InsertAsync(environment2D);
             return CreatedAtRoute("ReadEnvironment2D", new { environment2DId = createdEnvironment2D.Id }, createdEnvironment2D);
