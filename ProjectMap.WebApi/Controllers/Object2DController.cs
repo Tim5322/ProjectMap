@@ -6,7 +6,7 @@ using System;
 namespace ProjectMap.WebApi.Controllers
 {
     [ApiController]
-    [Route("Object2Ds")]
+    [Route("api/object2d")]
     public class Object2DController : ControllerBase
     {
         private readonly IObject2DRepository _object2DRepository;
@@ -20,16 +20,10 @@ namespace ProjectMap.WebApi.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpGet(Name = "ReadObject2Ds")]
-        public async Task<ActionResult<IEnumerable<Object2D>>> Get()
+        [HttpGet("environment/{environmentId}", Name = "ReadObject2Ds")]
+        public async Task<ActionResult<IEnumerable<Object2D>>> GetByEnvironmentId(Guid environmentId)
         {
-            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var object2Ds = await _object2DRepository.ReadByUserIdAsync(Guid.Parse(userId));
+            var object2Ds = await _object2DRepository.ReadByEnvironmentIdAsync(environmentId);
             return Ok(object2Ds);
         }
 
@@ -94,3 +88,5 @@ namespace ProjectMap.WebApi.Controllers
         }
     }
 }
+
+
