@@ -11,13 +11,13 @@ namespace ProjectMap.WebApi.Controllers
     {
         private readonly IObject2DRepository _object2DRepository;
         private readonly ILogger<Object2DController> _logger;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IEnvironment2DRepository _environment2DRepository;
 
-        public Object2DController(IObject2DRepository object2DRepository, ILogger<Object2DController> logger, IAuthenticationService authenticationService)
+        public Object2DController(IObject2DRepository object2DRepository, ILogger<Object2DController> logger, IEnvironment2DRepository environment2DRepository)
         {
             _object2DRepository = object2DRepository;
             _logger = logger;
-            _authenticationService = authenticationService;
+            _environment2DRepository = environment2DRepository;
         }
 
         [HttpGet("environment/{environmentId}", Name = "ReadObject2Ds")]
@@ -43,7 +43,8 @@ namespace ProjectMap.WebApi.Controllers
         {
             try
             {
-                if (object2D.Environment2DId == Guid.Empty)
+                var environment2D = await _environment2DRepository.ReadByIdAsync(object2D.Environment2DId);
+                if (environment2D == null)
                 {
                     return BadRequest("Environment2DId is required.");
                 }
