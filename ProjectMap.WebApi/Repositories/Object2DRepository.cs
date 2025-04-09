@@ -17,7 +17,7 @@ namespace ProjectMap.WebApi.Repositories
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
             {
-                await sqlConnection.ExecuteAsync("INSERT INTO [Object2D] (Id, PrefabId, PositionX, PositionY, ScaleX, ScaleY, Rotation, SortingLayer, Environment2DId) VALUES (@Id, @PrefabId, @PositionX, @PositionY, @ScaleX, @ScaleY, @Rotation, @SortingLayer, @Environment2DId)", object2D);
+                await sqlConnection.ExecuteAsync("INSERT INTO [Object2D] (Id, PrefabId, PositionX, PositionY, Environment2DId) VALUES (@Id, @PrefabId, @PositionX, @PositionY, @Environment2DId)", object2D);
                 return object2D;
             }
         }
@@ -38,6 +38,15 @@ namespace ProjectMap.WebApi.Repositories
             }
         }
 
+        public async Task<IEnumerable<Object2D>> ReadByUserIdAsync(Guid userId)
+        {
+            using (var sqlConnection = new SqlConnection(sqlConnectionString))
+            {
+                return await sqlConnection.QueryAsync<Object2D>(
+                    "SELECT o.* FROM [Object2D] o JOIN [Environment2D] e ON o.Environment2DId = e.Id WHERE e.UserId = @UserId", new { UserId = userId });
+            }
+        }
+
         public async Task UpdateAsync(Object2D object2D)
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))
@@ -46,10 +55,6 @@ namespace ProjectMap.WebApi.Repositories
                                                  "PrefabId = @PrefabId, " +
                                                  "PositionX = @PositionX, " +
                                                  "PositionY = @PositionY, " +
-                                                 "ScaleX = @ScaleX, " +
-                                                 "ScaleY = @ScaleY, " +
-                                                 "Rotation = @Rotation, " +
-                                                 "SortingLayer = @SortingLayer, " +
                                                  "Environment2DId = @Environment2DId " +
                                                  "WHERE Id = @Id", object2D);
             }
@@ -64,3 +69,6 @@ namespace ProjectMap.WebApi.Repositories
         }
     }
 }
+
+
+
