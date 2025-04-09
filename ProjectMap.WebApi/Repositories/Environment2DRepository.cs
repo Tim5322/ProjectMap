@@ -30,6 +30,15 @@ namespace ProjectMap.WebApi.Repositories
             }
         }
 
+        public async Task<IEnumerable<Environment2D>> ReadByUserIdAsync(Guid userId)
+        {
+            using (var sqlConnection = new SqlConnection(sqlConnectionString))
+            {
+                return await sqlConnection.QueryAsync<Environment2D>(
+                    "SELECT * FROM [Environment2D] WHERE UserId = @UserId", new { UserId = userId });
+            }
+        }
+
         public async Task<IEnumerable<Environment2D>> ReadAllAsync()
         {
             using (var sqlConnection = new SqlConnection(sqlConnectionString))

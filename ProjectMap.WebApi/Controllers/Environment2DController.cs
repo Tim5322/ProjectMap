@@ -23,7 +23,13 @@ namespace ProjectMap.WebApi.Controllers
         [HttpGet(Name = "ReadEnvironment2Ds")]
         public async Task<ActionResult<IEnumerable<Environment2D>>> Get()
         {
-            var environment2Ds = await _environment2DRepository.ReadAllAsync();
+            var userId = _authenticationService.GetCurrentAuthenticatedUserId();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var environment2Ds = await _environment2DRepository.ReadByUserIdAsync(Guid.Parse(userId));
             return Ok(environment2Ds);
         }
 
