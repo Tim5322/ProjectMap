@@ -39,7 +39,7 @@ namespace ProjectMap.WebApi.Controllers
         }
 
         [HttpPost(Name = "CreateObject2D")]
-        public async Task<ActionResult> Add(Object2D object2D)
+        public async Task<ActionResult> Add([FromBody] Object2D object2D)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace ProjectMap.WebApi.Controllers
                     return BadRequest("Environment2DId is required.");
                 }
 
-                object2D.Id = Guid.NewGuid();
+                object2D.Id = Guid.NewGuid(); // Generate the ID in the backend
 
                 var createdObject2D = await _object2DRepository.InsertAsync(object2D);
                 return CreatedAtRoute("ReadObject2D", new { object2DId = createdObject2D.Id }, createdObject2D);
@@ -62,7 +62,7 @@ namespace ProjectMap.WebApi.Controllers
         }
 
         [HttpPut("{object2DId}", Name = "UpdateObject2D")]
-        public async Task<ActionResult> Update(Guid object2DId, Object2D newObject2D)
+        public async Task<ActionResult> Update(Guid object2DId, [FromBody] Object2D newObject2D)
         {
             var existingObject2D = await _object2DRepository.ReadByIdAsync(object2DId);
 
