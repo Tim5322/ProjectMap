@@ -5,7 +5,7 @@ namespace ProjectMap.WebApi.Models;
 
 public class Object2D
 {
-    public Guid Id { get; set; }
+    public Guid? Id { get; set; }
     public string? PrefabId { get; set; }
     public int PositionX { get; set; }
     public int PositionY { get; set; }
